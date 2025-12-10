@@ -5,7 +5,7 @@ description: Break down tasks into step-by-step design, focusing on splitting in
 # Task Breakdown
 
 ## Task
-Based on requirements and solution design, break down work into executable Task/TODO items.
+Based on requirements and solution design, break down work into executable Task/TODO items. Tasks should be implementation-oriented, with each task resulting in a testable module or feature.
 
 ## What the AI will do:
 
@@ -20,8 +20,9 @@ Based on requirements and solution design, break down work into executable Task/
 
 ### Task Granularity
 - Each task should be an independently completable work unit
-- Task size should be moderate, typically completable in 1-4 hours
+- Tasks should be implementation-oriented, targeting a testable module or feature
 - Tasks should have clear inputs and outputs
+- Each task should result in a working, testable implementation
 
 ### Task Organization
 - Group by module or functional domain
@@ -51,6 +52,8 @@ Use TODO list format, for example:
 
 ## Important Notes
 
+- **Implementation-oriented**: Each task should focus on delivering a working, testable module or feature
+- **Testable outcomes**: Tasks should result in code that can be tested and verified
 - Ensure no circular dependencies between tasks
 - Prioritize breaking down tasks on the critical path
 - Set clear completion criteria for each task
