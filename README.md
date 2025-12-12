@@ -1,6 +1,7 @@
 # Mozi
 
 ![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)
+![Version](https://img.shields.io/badge/version-alpha-orange?style=flat-square)
 ![Go Version](https://img.shields.io/github/go-mod/go-version/Edison-A-N/mozi?style=flat-square)
 
 > A CLI tool for managing and sharing Cursor IDE Rules and Commands
@@ -141,7 +142,14 @@ A complete workflow for transforming requirements into working code:
 
 ## Project Status
 
-This project is actively maintained and ready for public use. We welcome contributions and feedback!
+**Current Version: Alpha**
+
+This project is in early development stage. Core functionality is working, but:
+- Features may change without notice
+- Some edge cases may not be handled
+- Documentation is still evolving
+
+We actively maintain this project and welcome your feedback to help improve it!
 
 ## Contributing
 
