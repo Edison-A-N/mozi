@@ -10,8 +10,12 @@ Create a concise, single-line commit message in English based on the staged chan
 3. ✅ Review `git log --oneline -10` to match existing commit message format
 4. ✅ Generate an appropriate commit message in English
 5. ✅ Execute `git commit -m "message"`
-6. ✅ Push changes with `git push` (if requested)
+6. ✅ If pre-commit hooks fail:
+   - **For auto-formatting issues**: Run `git diff` to check the auto-formatted changes, then precisely `git add` those files and retry commit
+   - **For other issues** (tests, linting errors, etc.): Stop immediately and provide concise guidance on what to do next
+7. ✅ Push changes with `git push` (if requested)
 
 ## Important Notes
-- If pre-commit hooks fail, **stop immediately** and notify the user to fix the issues
-- **Never** stage or add files automatically - only commit what is already staged
+- **Handle formatting auto-fixes**: If pre-commit hooks auto-format code (e.g., prettier, gofmt, black), automatically stage the formatted files and retry commit
+- **Stop for real errors**: If hooks fail due to tests, build errors, or other non-formatting issues, stop and clearly explain what needs to be fixed
+- **Never** stage unrelated files - only add files that were auto-formatted by the hooks during the commit attempt
