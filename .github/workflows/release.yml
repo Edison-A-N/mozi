@@ -99,10 +99,17 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Version: $VERSION"
 
-      - name: Create checksums
+      - name: Prepare release files
         run: |
+          # Move all binaries from subdirectories to artifacts root
+          find ./artifacts -type f -name 'mozi-*' -exec mv {} ./artifacts/ \;
+          # Remove empty subdirectories
+          find ./artifacts -type d -empty -delete
+          # Create checksums
           cd artifacts
-          find . -type f -name 'mozi-*' -exec shasum -a 256 {} \; > checksums.txt
+          sha256sum mozi-* > checksums.txt
+          # List all files for verification
+          ls -lh
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
@@ -145,6 +152,10 @@ jobs:
             # Download the binary for your platform
             # Windows AMD64
             Invoke-WebRequest -Uri "https://github.com/${{ github.repository }}/releases/download/v${{ steps.get_version.outputs.version }}/mozi-windows-amd64.exe" -OutFile "mozi.exe"
+            # Add to PATH or use directly
+
+            # Windows ARM64
+            Invoke-WebRequest -Uri "https://github.com/${{ github.repository }}/releases/download/v${{ steps.get_version.outputs.version }}/mozi-windows-arm64.exe" -OutFile "mozi.exe"
             # Add to PATH or use directly
             ```
 
