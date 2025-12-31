@@ -101,10 +101,14 @@ jobs:
 
       - name: Prepare release files
         run: |
-          # Move all binaries from subdirectories to artifacts root
-          find ./artifacts -type f -name 'mozi-*' -exec mv {} ./artifacts/ \;
-          # Remove empty subdirectories
-          find ./artifacts -type d -empty -delete
+          # Create a temporary directory for binaries
+          mkdir -p ./release-files
+          # Move all binaries from artifact subdirectories
+          find ./artifacts -type f -name 'mozi-*' -exec mv {} ./release-files/ \;
+          # Remove artifacts directory
+          rm -rf ./artifacts
+          # Rename release-files to artifacts
+          mv ./release-files ./artifacts
           # Create checksums
           cd artifacts
           sha256sum mozi-* > checksums.txt
