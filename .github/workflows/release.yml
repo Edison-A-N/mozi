@@ -1,0 +1,157 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Trigger on version tags like v1.0.0
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  build:
+    name: Build and Release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            goos: linux
+            goarch: amd64
+            artifact_name: mozi-linux-amd64
+          - os: ubuntu-latest
+            goos: linux
+            goarch: arm64
+            artifact_name: mozi-linux-arm64
+          - os: macos-latest
+            goos: darwin
+            goarch: amd64
+            artifact_name: mozi-darwin-amd64
+          - os: macos-latest
+            goos: darwin
+            goarch: arm64
+            artifact_name: mozi-darwin-arm64
+          - os: windows-latest
+            goos: windows
+            goarch: amd64
+            artifact_name: mozi-windows-amd64.exe
+          - os: windows-latest
+            goos: windows
+            goarch: arm64
+            artifact_name: mozi-windows-arm64.exe
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Get version from tag
+        id: get_version
+        run: |
+          if [ "${{ github.ref_type }}" == "tag" ]; then
+            VERSION=${GITHUB_REF#refs/tags/v}
+          else
+            VERSION="dev-$(git rev-parse --short HEAD)"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+
+      - name: Build binary
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: 0
+        run: |
+          go build -ldflags="-s -w" -o ${{ matrix.artifact_name }} main.go
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: ${{ matrix.artifact_name }}
+          retention-days: 30
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref_type == 'tag'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      - name: Get version from tag
+        id: get_version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+
+      - name: Create checksums
+        run: |
+          cd artifacts
+          find . -type f -name 'mozi-*' -exec shasum -a 256 {} \; > checksums.txt
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            artifacts/*
+          body: |
+            ## Mozi ${{ steps.get_version.outputs.version }}
+
+            ### Installation
+
+            #### Linux / macOS
+
+            ```bash
+            # Download the binary for your platform
+            # Linux AMD64
+            curl -L https://github.com/${{ github.repository }}/releases/download/v${{ steps.get_version.outputs.version }}/mozi-linux-amd64 -o mozi
+            chmod +x mozi
+            sudo mv mozi /usr/local/bin/
+
+            # Linux ARM64
+            curl -L https://github.com/${{ github.repository }}/releases/download/v${{ steps.get_version.outputs.version }}/mozi-linux-arm64 -o mozi
+            chmod +x mozi
+            sudo mv mozi /usr/local/bin/
+
+            # macOS AMD64
+            curl -L https://github.com/${{ github.repository }}/releases/download/v${{ steps.get_version.outputs.version }}/mozi-darwin-amd64 -o mozi
+            chmod +x mozi
+            sudo mv mozi /usr/local/bin/
+
+            # macOS ARM64 (Apple Silicon)
+            curl -L https://github.com/${{ github.repository }}/releases/download/v${{ steps.get_version.outputs.version }}/mozi-darwin-arm64 -o mozi
+            chmod +x mozi
+            sudo mv mozi /usr/local/bin/
+            ```
+
+            #### Windows
+
+            ```powershell
+            # Download the binary for your platform
+            # Windows AMD64
+            Invoke-WebRequest -Uri "https://github.com/${{ github.repository }}/releases/download/v${{ steps.get_version.outputs.version }}/mozi-windows-amd64.exe" -OutFile "mozi.exe"
+            # Add to PATH or use directly
+            ```
+
+            ### Verify Installation
+
+            ```bash
+            mozi --help
+            ```
+
+            ### Checksums
+
+            See `checksums.txt` for SHA256 checksums of all binaries.
+          draft: false
+          prerelease: ${{ contains(steps.get_version.outputs.version, '-') }}
