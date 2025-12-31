@@ -387,7 +387,7 @@ I'll fix both issues...
 - Use `/design` if the bug reveals design issues
 - Use `/requirements-to-implementation/*` for larger fixes requiring new features
 - Use `/ask` for quick questions during debugging
-- Follow `backend-coding-standards.mdc` when implementing fixes
+- Follow `code-quality-standards.mdc` when implementing fixes
 
 ## When to Use This Command
 

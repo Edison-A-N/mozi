@@ -1,0 +1,244 @@
+---
+description: Enforce code quality standards and best practices for all code implementation tasks
+globs: ["**/*.go", "**/*.js", "**/*.ts", "**/*.py", "**/*.java", "**/*.rs", "**/*.cpp", "**/*.c"]
+alwaysApply: false
+---
+
+# Code Quality Standards Rule
+
+## Purpose
+Ensure all code implementations follow consistent quality standards, best practices, and maintainability principles. This rule applies to ALL code writing, bug fixing, and implementation tasks.
+
+## Core Principles
+
+### 1. Code Consistency (MANDATORY)
+- **Follow existing patterns**: Match the codebase's existing style, naming conventions, and architectural patterns
+- **Language-specific standards**: Adhere to language-specific style guides (e.g., Go fmt, PEP 8 for Python, ESLint for JavaScript)
+- **Consistent formatting**: Use project's formatting tools (prettier, gofmt, black, etc.)
+- **Naming conventions**: Follow project's naming patterns for variables, functions, classes, files
+- **Action**: Before writing code, examine similar files in the codebase to understand patterns
+
+### 2. Error Handling (MANDATORY)
+- **Never ignore errors**: Always handle errors explicitly, never silently swallow them
+- **Meaningful error messages**: Provide clear, actionable error messages that help debugging
+- **Error propagation**: Decide when to handle vs propagate errors based on context
+- **Edge cases**: Consider null/undefined, empty inputs, boundary conditions, invalid states
+- **Action**: For each function, ask: "What can go wrong here? How should errors be handled?"
+
+### 3. Code Readability (MANDATORY)
+- **Clear intent**: Code should be self-documenting; intent should be obvious
+- **Appropriate comments**: Add comments for "why", not "what" (unless non-obvious)
+- **Function size**: Keep functions focused and reasonably sized (typically < 50 lines)
+- **Avoid magic numbers**: Use named constants for magic numbers and strings
+- **Meaningful names**: Use descriptive names for variables, functions, and classes
+- **Action**: Read your code as if you're seeing it for the first time - is it clear?
+
+### 4. Minimal Changes (MANDATORY)
+- **Fix only what's needed**: Don't refactor unrelated code while fixing bugs
+- **No scope creep**: Don't add features or improvements not requested
+- **Preserve behavior**: Ensure changes don't break existing functionality
+- **Action**: Before making changes, ask: "Is this change necessary for the current task?"
+
+### 5. Testing Considerations (MANDATORY)
+- **Testable code**: Write code that can be easily tested
+- **Edge cases**: Consider test cases for edge conditions, error paths, boundary values
+- **Test recommendations**: Suggest appropriate tests (unit, integration, manual) when implementing
+- **Action**: After implementing, ask: "How would I test this? What edge cases exist?"
+
+### 6. Performance Awareness (MANDATORY)
+- **Avoid premature optimization**: Write clear code first, optimize only if needed
+- **Common pitfalls**: Watch for N+1 queries, memory leaks, inefficient algorithms
+- **Resource management**: Properly close files, connections, and release resources
+- **Action**: For loops and data operations, consider: "Is this efficient? Could it be optimized?"
+
+### 7. Security Considerations (MANDATORY)
+- **Input validation**: Validate and sanitize all user inputs
+- **Avoid security anti-patterns**: No hardcoded secrets, SQL injection risks, XSS vulnerabilities
+- **Principle of least privilege**: Use minimal required permissions/access
+- **Action**: For user-facing code, ask: "What if malicious input is provided?"
+
+### 8. Documentation (MANDATORY)
+- **Public APIs**: Document exported/public functions, classes, and modules
+- **Complex logic**: Explain non-obvious algorithms or business logic
+- **Decisions**: Document important design decisions and trade-offs
+- **Action**: For public APIs or complex code, add clear documentation
+
+## Implementation Checklist
+
+Before outputting ANY code, verify:
+- [ ] Code follows existing codebase patterns and style
+- [ ] All errors are handled appropriately
+- [ ] Code is readable and self-documenting
+- [ ] Changes are minimal and focused on the task
+- [ ] Edge cases and error paths are considered
+- [ ] Performance implications are acceptable
+- [ ] Security considerations are addressed
+- [ ] Appropriate documentation is included
+
+## Language-Specific Guidelines
+
+### Go
+- Use `gofmt` for formatting
+- Handle all errors explicitly (no `_ = err`)
+- Use meaningful variable names (avoid single letters except in loops)
+- Keep functions focused and reasonably sized
+- Use interfaces for abstraction
+- Prefer composition over inheritance
+- Document exported functions with comments
+
+### JavaScript/TypeScript
+- Use consistent quote style (single/double as per project)
+- Use `const`/`let`, avoid `var`
+- Handle promises properly (use async/await or .then/.catch)
+- Use TypeScript types when available
+- Avoid `any` type unless necessary
+- Use meaningful variable and function names
+- Follow project's linting rules (ESLint)
+
+### Python
+- **Priority**: Follow project's ruff configuration if present (check `pyproject.toml`, `ruff.toml`, or `.ruff.toml`)
+- **Fallback**: If no ruff config exists, follow PEP 8 style guide
+- Use type hints when available
+- Handle exceptions explicitly
+- Use meaningful variable names (snake_case by default, unless ruff config specifies otherwise)
+- Keep functions focused (single responsibility)
+- Use docstrings for public functions
+- Avoid mutable default arguments
+
+### Java
+- Follow Java naming conventions (camelCase for methods/variables, PascalCase for classes)
+- Handle exceptions appropriately
+- Use meaningful names
+- Keep methods focused
+- Document public APIs with Javadoc
+- Use appropriate access modifiers
+
+## Code Review Checklist
+
+When reviewing code (your own or others'), check:
+- [ ] Does it solve the problem correctly?
+- [ ] Is it readable and maintainable?
+- [ ] Are errors handled properly?
+- [ ] Are edge cases covered?
+- [ ] Is it consistent with the codebase?
+- [ ] Are there any security concerns?
+- [ ] Is performance acceptable?
+- [ ] Is it properly tested (or testable)?
+
+## Stop Conditions
+
+STOP and ask for guidance if:
+1. You're unsure about the codebase's patterns or conventions
+2. The change would affect multiple unrelated areas
+3. You need to make significant architectural decisions
+4. Security implications are unclear
+5. Performance impact is uncertain
+6. Error handling strategy is ambiguous
+7. The change conflicts with existing code patterns
+
+## Anti-Patterns to Avoid
+
+### ❌ DON'T:
+- Ignore errors or use `_` to discard them without reason
+- Write overly complex code when simple solution exists
+- Copy-paste code without understanding it
+- Use magic numbers or strings without constants
+- Write functions that do multiple unrelated things
+- Skip error handling "for now"
+- Add features not requested in the task
+- Refactor unrelated code while fixing bugs
+- Use global variables unnecessarily
+- Write code that's hard to test
+
+### ✅ DO:
+- Handle errors explicitly and meaningfully
+- Write clear, readable code
+- Follow existing patterns in the codebase
+- Use meaningful names
+- Keep functions focused and small
+- Add appropriate comments for complex logic
+- Consider edge cases and error paths
+- Write testable code
+- Document public APIs
+- Make minimal, focused changes
+
+## Integration with Other Rules
+
+- **With writer-scope-control**: This rule focuses on code quality, while writer-scope-control focuses on writing scope and length
+- **With bug-fix**: Ensures bug fixes follow quality standards
+- **With execute-todo**: Ensures implementation tasks meet quality requirements
+- **With design**: Ensures designed solutions are implemented with quality standards
+
+## Examples
+
+### Good Error Handling
+```go
+// ✅ Good: Explicit error handling
+result, err := processData(input)
+if err != nil {
+    return fmt.Errorf("failed to process data: %w", err)
+}
+```
+
+```go
+// ❌ Bad: Ignoring errors
+result, _ := processData(input)
+// What if processData fails? We'll never know
+```
+
+### Good Code Readability
+```javascript
+// ✅ Good: Clear intent, meaningful names
+function calculateTotalPrice(items) {
+    const basePrice = items.reduce((sum, item) => sum + item.price, 0);
+    const tax = basePrice * TAX_RATE;
+    return basePrice + tax;
+}
+```
+
+```javascript
+// ❌ Bad: Unclear intent, magic numbers
+function calc(items) {
+    let s = 0;
+    for (let i = 0; i < items.length; i++) {
+        s += items[i].p;
+    }
+    return s + s * 0.1;
+}
+```
+
+### Good Minimal Changes
+```python
+# ✅ Good: Fix only what's needed
+def get_user(id):
+    if id is None:
+        return None  # Fixed: handle None case
+    return db.query(User).filter_by(id=id).first()
+```
+
+```python
+# ❌ Bad: Unnecessary refactoring
+def get_user(id):
+    # Refactored entire function when only None check was needed
+    user_repo = UserRepository(db)
+    return user_repo.find_by_id(id)
+```
+
+## When to Apply This Rule
+
+Apply this rule when:
+- Writing new code
+- Fixing bugs
+- Implementing features
+- Refactoring code
+- Reviewing code
+- Any code implementation task
+
+## When NOT to Apply
+
+This rule may be relaxed (but not ignored) when:
+- Writing throwaway/prototype code (but still handle errors)
+- Quick debugging scripts (but still be readable)
+- Explicitly experimental code (but document it)
+
+Even in these cases, core principles (error handling, readability) should still apply.
