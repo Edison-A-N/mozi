@@ -10,15 +10,18 @@ Mozi helps you organize and install Cursor IDE rules and commands by role. Defin
 
 ## Features
 
-- 📝 **Rules Management**: Manage rule files in `.mdc` format
-- 🎯 **Commands Management**: Define role capabilities through commands
-- 🔗 **Role Binding**: Automatically bind rules to roles
-- 📦 **CLI Tool**: One-click installation to Cursor configuration
-- 🔄 **Version Control**: Manage changes through Git
-- 🛠️ **Workflow Commands**: Pre-built commands for requirements-to-implementation workflow
-- 🔍 **Smart Conflict Handling**: Interactive conflict resolution (skip, overwrite, diff, merge)
+- 📝 Manage Cursor IDE rules and commands
+- 🎯 Organize commands by role
+- 🔗 Automatically bind rules to roles
+- 🔍 Interactive conflict resolution
 
 ## Installation
+
+### Quick Install
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Edison-A-N/mozi/main/install.sh | bash
+```
 
 ### Build from Source
 
@@ -26,16 +29,8 @@ Mozi helps you organize and install Cursor IDE rules and commands by role. Defin
 git clone https://github.com/Edison-A-N/mozi.git
 cd mozi
 go build -o mozi main.go
-sudo mv mozi /usr/local/bin/  # Optional: install to system path
+sudo mv mozi /usr/local/bin/
 ```
-
-### Using Go Install
-
-```bash
-go install github.com/Edison-A-N/mozi@latest
-```
-
-Make sure `$GOPATH/bin` or `$GOBIN` is in your PATH.
 
 ## Usage
 
@@ -52,133 +47,13 @@ mozi install --home
 mozi install --dir /path/to/config
 ```
 
-The tool will:
-- Copy `.md` files from `commands/` to `<target>/.cursor/commands/mozi/`
-- Copy `.mdc` files from `rules/` to `<target>/.cursor/rules/mozi/<role>/` (if rules exist)
-- Automatically bind rules to roles based on "Related Rules" section in command files (if rules exist)
-- Handle file conflicts with options: skip, overwrite, diff, or merge
-
-### Installation Structure
-
-```
-<target>/.cursor/
-├── commands/
-│   └── mozi/
-│       ├── ask.md
-│       ├── git-help/
-│       │   └── git-commit.md
-│       └── requirements-to-implementation/
-│           ├── 01-requirements-analysis.md
-│           ├── 02-clarify-questions.md
-│           ├── 03-breakdown-tasks.md
-│           └── 04-execute-todo.md
-```
-
-## File Format
-
-### Rules (`.mdc`)
-
-```markdown
----
-description: Rule description
-globs: ["**/*.ts", "**/*.tsx"]
-alwaysApply: false
----
-
-# Rule Title
-
-Rule content...
-```
-
-### Commands (`.md`)
-
-```markdown
----
-description: Command description
----
-
-# Command Title
-
-Command content...
-
-## Related Rules
-This role will apply the following rules:
-- rule-name-1
-- rule-name-2
-```
+The tool will copy commands and rules to your Cursor configuration directory and handle file conflicts interactively.
 
 ## Included Commands
 
-### Workflow Commands
-
-#### Requirements-to-Implementation Workflow
-A complete workflow for transforming requirements into working code:
-
-1. **01-requirements-analysis**: Break down requirements and design solutions
-   - Analyze background information
-   - Identify core requirements
-   - Design technical solutions
-   - Define goals and success criteria
-
-2. **02-clarify-questions**: Identify information that needs clarification
-   - Goal-oriented question identification
-   - Priority and impact assessment
-   - Blocking vs non-blocking questions
-
-3. **03-breakdown-tasks**: Break down work into executable TODO items
-   - Implementation-oriented task breakdown
-   - Dependency management
-   - Clear acceptance criteria
-
-4. **04-execute-todo**: Execute TODO items step by step
-   - One task at a time execution
-   - Progress tracking
-   - Completion verification
-
-#### Utility Commands
-
+- **requirements-to-implementation**: Complete workflow for transforming requirements into working code
 - **ask**: Ask questions only - no code changes (web search enabled)
 - **git-help/git-commit**: Help with Git commit message generation
-
-## Project Status
-
-**Current Version: Alpha**
-
-This project is in early development stage. Core functionality is working, but:
-- Features may change without notice
-- Some edge cases may not be handled
-- Documentation is still evolving
-
-We actively maintain this project and welcome your feedback to help improve it!
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-rule`)
-3. Commit your changes (`git commit -m 'Add some amazing rule'`)
-4. Push to the branch (`git push origin feature/amazing-rule`)
-5. Open a Pull Request
-
-### Adding New Commands
-
-To add a new command:
-1. Create a `.md` file in the `commands/` directory
-2. Add frontmatter with `description` field
-3. Optionally add a "Related Rules" section to bind rules to the command
-
-### Adding New Rules
-
-To add a new rule:
-1. Create a `.mdc` file in the `rules/` directory
-2. Add frontmatter with `description`, `globs`, and `alwaysApply` fields
-3. Reference the rule in command files' "Related Rules" section
-
-## Related Links
-
-- [Cursor Official Documentation](https://docs.cursor.com)
-- [Cursor Rules Documentation](https://docs.cursor.com/zh/context/rules)
 
 ## License
 
